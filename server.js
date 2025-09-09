@@ -2,6 +2,9 @@ const express= require('express');
 
 const app = express()
 
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+
 let users=[
 
     {id:0, name:'Béla',age:23,gender:'male'},
@@ -26,10 +29,19 @@ app.get('/users/:id',(req,res)=>{
     
     if(idx>-1)
         {
-           return res.send(users[idx].name+", "+users[idx].age);
+           return res.send(users[idx]);
         }
         return res.send('Nincs ilyen felhasznalo');
 })
 
+// POST new user
+
+app.post('/users', (req,res)=>{
+
+    let data=req.body;
+    console.log(data);
+    res.send("blablablaableblebe")
+});
 
 app.listen(3000)
+

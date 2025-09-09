@@ -1,0 +1,24 @@
+### GET / route
+
+GET http://localhost:3000
+Content-Type: application/json
+
+### GET users
+
+GET http://localhost:3000/users
+Content-Type: application/json
+
+### GET users/2
+
+GET http://localhost:3000/users/2
+Content-Type: application/json
+
+### POST users
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "name":"Béla",
+    "age":23,
+    "gender":"male"
+}
