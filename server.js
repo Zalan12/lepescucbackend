@@ -1,18 +1,16 @@
 const express= require('express');
-
+const fs=require('fs');
+const path=require('path');
 const app = express()
+//Middlewarek
+app.use(express.json()) //JSON formátum követelése
+app.use(express.urlencoded({extended: true})) //req body-n keresztül átmennek az adatok
 
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+let users=[];
 
-let users=[
+const USERSFILE=path.join(__dirname,'users.json');
 
-    {id:0, name:'Béla',age:23,gender:'male'},
-    {id:1, name:'Anna',age:15,gender:'female'},
-    {id:2, name:'Martin',age:19,gender:'male'},
-    {id:3, name:'Józsi',age:34,gender:'male'},
-    {id:4, name:'Maria',age:21,gender:'female'}
-];
+loadUsers();
 
 app.get('/', (req, res) => {
   res.send(' Backend API by Bajai SZC Türr IStván Technikum - 13.A Szerverfejlesztő')
@@ -39,9 +37,85 @@ app.get('/users/:id',(req,res)=>{
 app.post('/users', (req,res)=>{
 
     let data=req.body;
-    console.log(data);
-    res.send("blablablaableblebe")
+    data.id=getNextID();
+    users.push(data);
+    res.send(users);
+    saveUsers();
 });
 
+//DELELTE user By ID
+
+app.delete('/users/:id', (req,res)=>{
+    let id=req.params.id;
+    let idx=users.findIndex(user=>user.id==id);
+    
+    if(idx>-1)
+        {
+          users.splice(idx,1);
+          return res.send('A felhasználó törölve let');
+          saveUsers();
+        }
+        return res.send('Nincs ilyen felhasznalo');
+
+});
+
+//UPDATE user by ID
+app.patch('/users/:id', (req,res) =>{
+    let id=req.params.id;
+    let data=req.body;
+    let idx=users.findIndex(user=>user.id==id);
+    
+    if(idx>-1)
+        {
+          users[idx]=data;
+          users[idx].id=Number(id);
+          saveUsers();
+          return res.send('A felhasználó módositva let');
+        }
+        return res.send('Nincs ilyen felhasznalo');
+})
+
 app.listen(3000)
+
+function getNextID()
+{
+    let nextID=1;
+    if(users.length==0)
+        {
+            return nextID;
+        }
+    let maxIndex=0;
+    for (let i = 0; i < users.length; i++) {
+        if(users[i].id>users[maxIndex].id)
+            {
+                maxIndex=i;
+                
+            }
+        
+    }
+    return users[maxIndex].id+1;
+}
+function loadUsers()
+{
+    if(fs.existsSync(USERSFILE))
+        {
+            const raw=fs.readFileSync(USERSFILE);
+            try
+            {
+                users=JSON.parse(raw);
+
+            }
+            catch(err){
+                console.log("Hiba!",err);
+                users=[];
+            }
+        }
+    else{
+        saveUsers();
+    }
+}
+function saveUsers(){
+    fs.writeFileSync(USERSFILE,JSON.stringify(users));
+
+}
 
