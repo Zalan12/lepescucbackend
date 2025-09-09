@@ -18,7 +18,7 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-    "name":"Bsssa",
+    "name":"Emma",
     "email":"frgrg@rgt.com",
     "jelszo":"male123"
 }

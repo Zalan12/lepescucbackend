@@ -1,8 +1,10 @@
 const express= require('express');
 const fs=require('fs');
 const path=require('path');
+const cors=require('cors');
 const app = express()
 //Middlewarek
+app.use(cors());
 app.use(express.json()) //JSON formátum követelése
 app.use(express.urlencoded({extended: true})) //req body-n keresztül átmennek az adatok
 
@@ -29,7 +31,7 @@ app.get('/users/:id',(req,res)=>{
         {
            return res.send(users[idx]);
         }
-        return res.send('Nincs ilyen felhasznalo');
+        return res.status(400).send({msg:'Nincs ilyen felhasznalo'});
 })
 
 // POST new user
@@ -37,10 +39,14 @@ app.get('/users/:id',(req,res)=>{
 app.post('/users', (req,res)=>{
 
     let data=req.body;
+    if(isEmailExists(data.email)){
+        return res.status(400).send({msg:'Ez a cim mar regisztralt!'})
+    }
     data.id=getNextID();
     users.push(data);
-    res.send(users);
     saveUsers();
+    res.send({msg:'Sikreres regisztráció!'});
+    
 });
 
 //DELELTE user By ID
@@ -52,10 +58,10 @@ app.delete('/users/:id', (req,res)=>{
     if(idx>-1)
         {
           users.splice(idx,1);
-          return res.send('A felhasználó törölve let');
+          return res.send({msg:'A felhasználó törölve let'});
           saveUsers();
         }
-        return res.send('Nincs ilyen felhasznalo');
+        return res.status(400).send({msg:'Nincs ilyen felhasznalo'});
 
 });
 
@@ -70,9 +76,9 @@ app.patch('/users/:id', (req,res) =>{
           users[idx]=data;
           users[idx].id=Number(id);
           saveUsers();
-          return res.send('A felhasználó módositva let');
+          return res.send({msg:'A felhasználó módositva let'});
         }
-        return res.send('Nincs ilyen felhasznalo');
+        return res.status(400).send({msg:'Nincs ilyen felhasznalo'});
 })
 
 app.listen(3000)
@@ -119,3 +125,14 @@ function saveUsers(){
 
 }
 
+function isEmailExists(email)
+{
+    let exists=false;
+    users.forEach(user=>{
+        if(user.email==email){
+            exists=true;
+            return;
+        }
+    })
+    return exists;
+}
