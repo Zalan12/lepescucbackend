@@ -49,6 +49,21 @@ app.post('/users', (req,res)=>{
     
 });
 
+
+//post Logged user
+app.post('/users/login',(req,res)=> {
+    let { email, password }=req.body;
+    let loggeduser={};
+    users.forEach(user => {
+        if(user.email==email && user.password==password){
+            loggeduser=user;
+            return;
+        }
+    })
+    res.send(loggeduser);
+
+})
+
 //DELELTE user By ID
 
 app.delete('/users/:id', (req,res)=>{

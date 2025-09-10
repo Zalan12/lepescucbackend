@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ### DELETE user By ID
 
-DELETE http://localhost:3000/users/1
+DELETE http://localhost:3000/users/4
 Content-Type: :application/json
 
 ### PATCH user by id
@@ -36,4 +36,15 @@ Content-Type: :application/json
     "name":"Bélaa",
     "age":25,
     "gender":"male"
+}
+
+### POST login
+
+PATCH http://localhost:3000/users/login
+Content-Type: application/json
+
+{
+    "email":"vj@vendo.baja",
+    "password":"Vendo123"
+    
 }
