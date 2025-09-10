@@ -10,7 +10,7 @@ Content-Type: application/json
 
 ### GET users/2
 
-GET http://localhost:3000/users/2
+GET http://localhost:3000/users/3
 Content-Type: application/json
 
 ### POST users
@@ -29,7 +29,7 @@ DELETE http://localhost:3000/users/4
 Content-Type: :application/json
 
 ### PATCH user by id
-PATCH http://localhost:3000/users/4
+PATCH http://localhost:3000/users/3
 Content-Type: :application/json
 
 {

@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 app.get('/users', (req,res)=>{
     res.send(users);
 })
-
+//random get
 app.get('/users/:id',(req,res)=>{
     let id=req.params.id;
     let idx=users.findIndex(user=>user.id==id);
