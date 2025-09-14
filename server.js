@@ -96,6 +96,30 @@ app.patch('/users/:id', (req,res) =>{
         return res.status(400).send({msg:'Nincs ilyen felhasznalo'});
 })
 
+//UPDATE felhasználó cuccos
+app.patch('/users/:id', (req,res) =>{
+    let id=Number(req.params.id);
+    let data=req.body;
+    let idx=users.findIndex(user=>Number(user.id)===id);
+    
+    if(idx>-1)
+    {
+        if(data.email && data.email != users[idx].email)
+            {
+                let exists=users.some(user => user.email===data.email && Number(user.id)!==id)
+                if(exists)
+                    {return res.status(400).send({msg: "Foglalt email cím!"})
+            }
+            users[idx].email=data.email;
+            }
+        if(data.name) users[idx].name=data.name;
+        saveUsers();
+        return res.send({user: users[idx]})
+
+    }
+    return res.status(400).send({msg: "Nincs ilyen felhjasználó"})
+})
+
 app.listen(3000)
 
 function getNextID()
