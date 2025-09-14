@@ -120,6 +120,22 @@ app.patch('/users/:id', (req,res) =>{
     return res.status(400).send({msg: "Nincs ilyen felhjasználó"})
 })
 
+app.patch('/users/jelszovalt/:id',(req, res) => {
+    let id=Number(req.params.id);
+    let data=req.body;
+    let idx=users.findIndex(user=>Number(user.id)===id);
+    
+    if(idx>-1)
+    {
+        if(data.password && data.newPassword){
+        users[idx].password=data.newPassword;
+        saveUsers()
+        return res.send({msg: "A felhasználó módosítva lett", user:users[idx]})}
+        
+    }
+    
+})
+
 app.listen(3000)
 
 function getNextID()
