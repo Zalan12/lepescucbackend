@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ### DELETE user By ID
 
-DELETE http://localhost:3000/users/4
+DELETE http://localhost:3000/users/6
 Content-Type: :application/json
 
 ### PATCH user by id
@@ -56,8 +56,8 @@ POST http://localhost:3000/steps
 Content-Type: application/json
 
 {
-    "lepes":444,
-    "datum":"2001.09.21"
+    "lepes":5300,
+    "datum":"2014.12.02"
 }
 
 ### GET lepes adatok
@@ -67,5 +67,35 @@ Content-Type: application/json
 
 ### GET lepes adat by SID
 
-GET http://localhost:3000/steps/1
+GET http://localhost:3000/steps/2
+Content-Type: application/json
+
+### GET osszes lepes by UID
+
+GET http://localhost:3000/steps/user/1
+Content-Type: application/json
+
+### PATCH lepes adat by SID
+
+PATCH http://localhost:3000/steps/1
+Content-Type: application/json
+
+{
+    "lepes":3000,
+    "datum":"2022.02.02"
+}
+
+### DELETE lepes adat by SID
+
+DELETE http://localhost:3000/steps/2
+Content-Type: application/json
+
+### DELETE lepes adatok by UID
+
+DELETE http://localhost:3000/steps/user/1
+Content-Type: application/json
+
+### DELETE osszes lepes adat
+
+DELETE http://localhost:3000/steps
 Content-Type: application/json

@@ -14,6 +14,8 @@ let lepesAdat=[];
 const USERSFILE=path.join(__dirname,'users.json');
 const LEPESFILE=path.join(__dirname,'stepData.json')
 
+
+
 loadUsers();
 loadData();
 
@@ -78,8 +80,9 @@ app.delete('/users/:id', (req,res)=>{
     if(idx>-1)
         {
           users.splice(idx,1);
-          return res.send({msg:'A felhasználó törölve let'});
           saveUsers();
+          return res.send({msg:'A felhasználó törölve let'});
+          
         }
         return res.status(400).send({msg:'Nincs ilyen felhasznalo'});
 
@@ -125,6 +128,7 @@ app.patch('/users/:id', (req,res) =>{
     return res.status(400).send({msg: "Nincs ilyen felhjasználó"})
 })
 
+//PATCH Jelszovaltas
 app.patch('/users/jelszovalt/:id',(req, res) => {
     let id=Number(req.params.id);
     let data=req.body;
@@ -143,12 +147,24 @@ app.patch('/users/jelszovalt/:id',(req, res) => {
 
 //----------------STEPS---------------------
 
-//GET all steps by UserId
+//GET all steps by all users
 app.get('/steps', (req,res)=>{
     res.send(lepesAdat);
 
 })
 
+//GET all step by UserID
+app.get('/steps/user/:uid',(req,res) => {
+    let userLepes = []
+    let uid = Number(req.params.uid)
+    for (let i = 0; i < lepesAdat.length; i++) {
+        if(lepesAdat[i].uid == uid){
+            userLepes.push(lepesAdat[i])
+        }
+        
+    }
+    res.send(userLepes)
+})
 
 
 //GET one step by id
@@ -175,11 +191,53 @@ app.post('/steps',(req,res)=>{
 
 //PATCH step by id
 
+app.patch('/steps/:id', (req,res) =>{
+    let id=Number(req.params.id);
+    let data=req.body;
+    let idx=lepesAdat.findIndex(adat=>Number(adat.sid)===id);
+    
+    if(idx>-1)
+    {
+       if(data.datum) lepesAdat[idx].datum=data.datum;
+       if(data.lepes) lepesAdat[idx].lepes=data.lepes;
+       saveData();
+       return res.send({msg: "A lépésadat módosítva lett!",lepes:lepesAdat[idx]})
+    }
+    return res.status(400).send({msg: "Nincs ilyen fazonosítóval ellátott adat"})
+})
+
 //DELETE step by id
 
+app.delete('/steps/:id', (req,res)=>{
+    let id=req.params.id;
+    let idx=lepesAdat.findIndex(user=>user.sid==id);
+
+        lepesAdat.splice(idx,1);
+        saveData();
+        return res.send({msg:'Az adat törölve let'});
+        
+
+});
+
 //DELETE all steps by userId
-
-
+app.delete('/steps/user/:uid', (req,res)=>{
+    let uid=req.params.uid;
+        for (let i = 0; i < lepesAdat.length; i++) {
+        if(lepesAdat[i].uid == uid){
+            lepesAdat.splice(i,1)
+            i--
+        }
+        
+    }
+    saveData()
+    res.send("Sikeresen törölve!")
+});
+//DELETE all stepData
+app.delete('/steps',(req,res) =>{
+    lepesAdat = []
+    saveData()
+    res.send("Összes adat törölve")
+})
 
 app.listen(3000)
 
