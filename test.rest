@@ -29,7 +29,7 @@ DELETE http://localhost:3000/users/4
 Content-Type: :application/json
 
 ### PATCH user by id
-PATCH http://localhost:3000/users/3
+PATCH http://localhost:3000/users/2
 Content-Type: :application/json
 
 {
@@ -48,3 +48,24 @@ Content-Type: application/json
     "password":"Vendo123"
     
 }
+
+
+### POST lepes adat
+
+POST http://localhost:3000/steps
+Content-Type: application/json
+
+{
+    "lepes":444,
+    "datum":"2001.09.21"
+}
+
+### GET lepes adatok
+
+GET http://localhost:3000/steps
+Content-Type: application/json
+
+### GET lepes adat by SID
+
+GET http://localhost:3000/steps/1
+Content-Type: application/json

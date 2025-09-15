@@ -9,20 +9,25 @@ app.use(express.json()) //JSON formátum követelése
 app.use(express.urlencoded({extended: true})) //req body-n keresztül átmennek az adatok
 
 let users=[];
+let lepesAdat=[];
 
 const USERSFILE=path.join(__dirname,'users.json');
+const LEPESFILE=path.join(__dirname,'stepData.json')
 
 loadUsers();
+loadData();
 
 app.get('/', (req, res) => {
   res.send(' Backend API by Bajai SZC Türr IStván Technikum - 13.A Szerverfejlesztő')
 });
 
+//------------------USERS-----------------
+
 //get all users
 app.get('/users', (req,res)=>{
     res.send(users);
 })
-//random get
+//get user by id
 app.get('/users/:id',(req,res)=>{
     let id=req.params.id;
     let idx=users.findIndex(user=>user.id==id);
@@ -82,9 +87,9 @@ app.delete('/users/:id', (req,res)=>{
 
 //UPDATE user by ID
 app.patch('/users/:id', (req,res) =>{
-    let id=req.params.id;
+    let id=Number(req.params.id);
     let data=req.body;
-    let idx=users.findIndex(user=>user.id==id);
+    let idx=users.findIndex(user=>Number(user.id)==id);
     
     if(idx>-1)
         {
@@ -136,6 +141,46 @@ app.patch('/users/jelszovalt/:id',(req, res) => {
     
 })
 
+//----------------STEPS---------------------
+
+//GET all steps by UserId
+app.get('/steps', (req,res)=>{
+    res.send(lepesAdat);
+
+})
+
+
+
+//GET one step by id
+app.get('/steps/:id', (req,res)=>{
+    let id=req.params.id;
+    let idx=lepesAdat.findIndex(step=>step.sid==id);
+    
+    if(idx>-1)
+        {
+           return res.send(lepesAdat[idx]);
+        }
+        return res.status(400).send({msg:'Nincs ilyen felhasznalo'});
+    
+})
+//POST new step
+app.post('/steps',(req,res)=>{
+    let data=req.body;
+    data.sid=getNextSID();
+    lepesAdat.push(data);
+    saveData();
+    res.send({msg:'Sikreres adatfelvétel!'});
+
+})
+
+//PATCH step by id
+
+//DELETE step by id
+
+//DELETE all steps by userId
+
+
+
 app.listen(3000)
 
 function getNextID()
@@ -155,6 +200,25 @@ function getNextID()
         
     }
     return users[maxIndex].id+1;
+}
+
+function getNextSID()
+{
+    let nextSID=1;
+    if(lepesAdat.length==0)
+        {
+            return nextSID;
+        }
+    let maxIndex=0;
+    for (let i = 0; i < lepesAdat.length; i++) {
+        if(lepesAdat[i].sid>lepesAdat[maxIndex].sid)
+            {
+                maxIndex=i;
+                
+            }
+        
+    }
+    return lepesAdat[maxIndex].sid+1;
 }
 function loadUsers()
 {
@@ -190,4 +254,27 @@ function isEmailExists(email)
         }
     })
     return exists;
+}
+function saveData(){
+    fs.writeFileSync(LEPESFILE,JSON.stringify(lepesAdat));
+}
+
+function loadData()
+{
+    if(fs.existsSync(LEPESFILE))
+        {
+            const raw=fs.readFileSync(LEPESFILE);
+            try
+            {
+                lepesAdat=JSON.parse(raw);
+
+            }
+            catch(err){
+                console.log("Hiba!",err);
+                lepesAdat=[];
+            }
+        }
+    else{
+        saveData();
+    }
 }
