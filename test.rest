@@ -56,8 +56,8 @@ POST http://localhost:3000/steps
 Content-Type: application/json
 
 {
-    "lepes":5300,
-    "datum":"2014.12.02"
+    "lepes":53300,
+    "datum":"2015.06.02"
 }
 
 ### GET lepes adatok
@@ -67,7 +67,7 @@ Content-Type: application/json
 
 ### GET lepes adat by SID
 
-GET http://localhost:3000/steps/2
+GET http://localhost:3000/steps/1
 Content-Type: application/json
 
 ### GET osszes lepes by UID
@@ -87,12 +87,12 @@ Content-Type: application/json
 
 ### DELETE lepes adat by SID
 
-DELETE http://localhost:3000/steps/2
+DELETE http://localhost:3000/steps/1
 Content-Type: application/json
 
 ### DELETE lepes adatok by UID
 
-DELETE http://localhost:3000/steps/user/1
+DELETE http://localhost:3000/steps/user/2
 Content-Type: application/json
 
 ### DELETE osszes lepes adat
